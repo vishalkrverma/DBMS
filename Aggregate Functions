@@ -1,0 +1,167 @@
+------------------------- AGGREGATE FUNCTION  --------------------------------
+AGGREGATE FUNCTIONS ARE THOSE FUNCTION WHICH TAKES A SERIES OF INPUT AND PRODUCES A SINGLE OUTPUT..
+
+SOME IMPORTANT AGGREGATE FUNCTIONS ARE:
+MIN()
+MAX()
+AVG()
+COUNT()
+SUM()
+
+-------------------------  FOR EXAMPLE   ---------------------------
+select 
+    MAX(amount) as highestPayment,
+    MIN(amount) as lowestPayment,
+    AVG(amount) as averagePayment
+    SUM(amount)as totolPayment
+from payments;
+
+----------------- EXAMPLE 2 ------------------------------------------ 
+NOTE: COUNT doesnot work on null value..
+
+select 
+   count(*) as totalOrders,
+   count(requiredDate) as totalOrders,
+   count(shippedDate) as shippedOrders
+from orders;
+
+-----------------  EXAMPLE 3 --------------------------------------------------
+select 
+    count(*) as "Under Processing"
+from orders
+where status="In Process"
+
+-----------------  EXAMPLE 4  ---------------------------------------------
+MAX()  and  MIN() also used on string.
+select 
+     MAX(checkNumber),
+     MIN(checkNumber)
+from payments;
+
+
+----------------  GROUP BY CLAUSE  ----------------------------------
+select 
+   c1,c2,c3.....ci,  aggregate_function(c1)
+from
+   table
+where
+     where_conditions
+group by
+     c1,c2,c3......cn;
+
+
+---------------------------  EXAMPLE:  -----------------------------------
+select 
+    officecode,
+city,state
+  COUNT(employeeNumber) as employeeCount
+from
+employees
+join offices using (officeCode)
+group by officeCOde,city,state
+
+----------------------------------------------------------
+
+NOTE:
+    where clause is used only with primary column not with the aggregated column.
+
+[where] is used to filter the data before the grouping....
+            while
+[having] is used to filter the data after the grouping...
+
+
+-------------  HOW THE CODES ARE GET EXECUTED IN MYSQL ENGINE ----------------------
+Select 
+    officeCode ,city
+    COUNT(employeeNumber) as employeeCnt
+from
+    employees
+    join offices using (officeCode)
+where officeCode in (1,2,4,5)
+Group By officeCode
+having employeeCnt>4
+
+
+
+STEPS OF EXECUTION OF THE CODE:
+FROM------> WHERE---->GROUP BY------> HAVING -------> SELECT-----> DISTINCT------> ORDER BY-----> LIMIT
+
+----------------------- HAVING CLAUSE  ---------------------------------------
+COUNTRY WISE COUNT OF ORDERS, DISPLAYS ORDERS ordercnt>20
+
+SELECT country
+       COUNT(*) AS totalorders
+from orders
+join customers using (customerNumber)
+group by country
+having totalOrders > 20
+
+
+-------- NO OF PRODUCTS IN EACH PRODUCT LINE -----------------------------
+select 
+      productLine,
+      Count(*) as productCount
+from products
+group by productLine
+
+-------- TOTAL PAYMENTS FROM EACH CUSTOMERS AFTER A CERTAINS DATE ----------------
+
+NOTE:  [WHERE] ALWAYS USED BEFORE THE GROUP CLAUSE....
+ select customerNumber,CustomerName
+       SUM(amount) as totalOrderValue
+from payments
+Join customers using (customernumber)
+where paymentDate > '2004-02-02'
+group by customerNumbers
+
+---------- VALUE OF EACH UNIQUE ORDER SORTED BY TOTAL ORDER VALUE ---------------------------
+
+SELECT
+     orderNumber,
+     SUM(quantityOrder * priceEach ) as orderTotal
+from orderDetails
+Group by orderNumber
+order by orderTotal DESC
+
+------ VALUE OF EACH UNIQUE ORDER,ITS CUSTOMER NO, CUSTOMER NAME ,SORTED BY ---------------------------
+
+select orderNumber,customerNumber,customerName,
+       SUM(quantityOrder*priceEach) as orderTotal
+from orderDetails
+join orders using (orderNumber)
+join customers using (customerNumber)
+group by orderNumber
+order by orderTotal DESC.
+
+-------------
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
