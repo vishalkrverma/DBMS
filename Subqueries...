@@ -1,0 +1,122 @@
+FIND PRODUCTS THAT HAVE SAME PRODUCT LINES AS OF '1917 GRAND TOURING SEDAB'
+------------------ EXAMPLE 1 ------------------------------------------------
+
+ select * from products
+where productLine=
+(select productLine from products
+where productName='1917 GRAND TOURING SEDAB');
+
+
+---------------------- EXAMPLE 2 --------------------------------------
+FIND THE CAR THAT ARE COSTLIER THAN "1936 MERCEDES-BENZ 500K SPECIAL ROADSTER'
+
+select *
+from products 
+where productLine  REGEXP 'CAR' AND MSRP >
+(select productLine from porducts
+where productName="1936 MERCEDES-BENZ 500K SPECIAL ROADSTER')
+
+----------------  EXAMPLE 3 --------------------------------------
+
+ FIND THE CARS COSTLIER THAN THE AVERAGE COST OF ALL CARS...
+
+select *
+from productLine REGEXP 'car' AND MSRP >(
+select AVG(MSRP)
+from products
+where productLine IN ('classic cars','vintage cars')
+);
+
+--------------- EXAMPLE 4  -------------------------------------
+CUSTOMER WHO NEVER PLACED AN ORDER (SUBQUERIES AND JOINS)
+
+
+
+
+
+
+
+
+
+
+
+
+------------------- ALL KEYWORDS ----------------------------------------------------
+ PROBLEMS:
+       FIND PRODUCTS COSTLIER THAN ALL TRUCKS
+
+select * from
+ products where MSRP > ALL (
+ select MSRP from products
+  where productLine REGEXP 'TRUCK'
+)
+
+ALL returns true only if the comparison is true for every value in the subquery or list.
+If the subquery returns no rows, ALL returns true (since the comparison holds for an empty set).
+ALL is different from ANY or SOME, which mean "at least one".
+
+
+EXAMPLE:
+       SELECT * 
+FROM Students 
+WHERE Score >= ALL (SELECT Score FROM Students WHERE Class = 'B');
+
+
+------------------ ANY KEYWORDS -------------------------------------------
+
+The ANY keyword in SQL is used to compare a value to any value in a subquery or list
+— it returns TRUE if the condition is true for at least one value in that set.
+SELECT * 
+FROM Products 
+WHERE Price != ANY (10, 20, 30);
+
+-------------- CORRELATED SUBQUERY -----------------------------------------
+A correlated subquery is a subquery that depends on the outer query for its values. 
+It is executed once for each row selected by the outer query.
+
+A correlated subquery references a column from the outer query in its WHERE clause or SELECT clause.
+SELECT column1
+FROM table1 t1
+WHERE EXISTS (
+    SELECT 1
+    FROM table2 t2
+    WHERE t2.foreign_key = t1.primary_key
+);
+
+
+-------------- EXAMPLE 2 -----------------------------------------------
+SELECT column1
+FROM table1 t1
+WHERE EXISTS (
+    SELECT 1
+    FROM table2 t2
+    WHERE t2.foreign_key = t1.primary_key
+);
+
+---------------------------- EXISTS OPERATOR --------------------------------------
+The EXISTS operator in SQL is used to test for the existence of rows returned by a subquery.
+It returns TRUE if the subquery returns at least one row, and FALSE if the subquery returns no rows.
+
+Query: Find employees who work in departments with a budget > 50000
+
+SELECT Name
+FROM Employees e
+WHERE EXISTS (
+    SELECT 1
+    FROM Departments d
+    WHERE d.DeptID = e.DeptID
+    AND d.Budget > 50000
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
